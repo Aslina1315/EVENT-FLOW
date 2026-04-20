@@ -100,10 +100,11 @@ function App() {
             />
             <BottomNav />
             
-            {/* Mobile/Floating Menu Toggle for Desktop when closed */}
+            {/* Floating sidebar toggle — shown only on desktop when sidebar is collapsed */}
             {!isSidebarOpen && (
               <button
                 onClick={() => setIsSidebarOpen(true)}
+                aria-label="Open navigation sidebar"
                 className="fixed top-6 left-6 z-40 p-3 bg-surface/50 backdrop-blur-xl border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors hidden md:block"
               >
                 <Menu size={24} />
@@ -139,11 +140,12 @@ function App() {
               )}
             </AnimatePresence>
 
-            {/* Floating SOS Button */}
+            {/* Floating SOS / Emergency button — always accessible in bottom-right corner */}
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => setShowEmergency(true)}
+              aria-label="Activate emergency mode"
               className="fixed bottom-24 md:bottom-8 right-4 md:right-8 z-40 w-14 h-14 bg-red-500 rounded-full flex items-center justify-center text-white shadow-[0_0_20px_rgba(239,68,68,0.6)] border-2 border-red-400 hover:bg-red-600 transition-colors"
             >
               <AlertTriangle size={24} />
