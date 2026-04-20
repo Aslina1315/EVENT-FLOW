@@ -24,11 +24,13 @@ const EmergencyModal = ({ isOpen, onClose }) => {
             {/* Background Hazard Pattern */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[repeating-linear-gradient(45deg,#e11d48_0,#e11d48_20px,transparent_20px,transparent_40px)]"></div>
             
+            {/* Close / dismiss button for the emergency overlay */}
             <button 
               onClick={onClose} 
+              aria-label="Close emergency mode"
               className="absolute top-8 right-8 z-20 p-4 text-rose-200 hover:text-white bg-rose-950/50 rounded-2xl hover:bg-rose-800 transition-all border border-rose-500/20 active:scale-90"
             >
-              <X size={24} />
+              <X size={24} aria-hidden="true" />
             </button>
 
             <div className="relative z-10 p-10 md:p-16">
@@ -85,12 +87,15 @@ const EmergencyModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
+              {/* Action buttons: route guidance and security link */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <Button className="py-8 bg-white text-rose-600 hover:bg-gray-100 hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] border-none text-sm font-black uppercase tracking-[0.3em] rounded-3xl">
+                <Button className="py-8 bg-white text-rose-600 hover:bg-gray-100 hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] border-none text-sm font-black uppercase tracking-[0.3em] rounded-3xl"
+                  aria-label="Get route to nearest safe exit">
                   Route to Safety
                 </Button>
-                <Button className="py-8 bg-rose-600 text-white hover:bg-rose-500 hover:shadow-[0_0_30px_rgba(225,29,72,0.5)] border-rose-400/50 text-sm font-black uppercase tracking-[0.3em] rounded-3xl flex items-center justify-center gap-3">
-                  <Phone size={20} />
+                <Button className="py-8 bg-rose-600 text-white hover:bg-rose-500 hover:shadow-[0_0_30px_rgba(225,29,72,0.5)] border-rose-400/50 text-sm font-black uppercase tracking-[0.3em] rounded-3xl flex items-center justify-center gap-3"
+                  aria-label="Contact security team">
+                  <Phone size={20} aria-hidden="true" />
                   Security Link
                 </Button>
               </div>
