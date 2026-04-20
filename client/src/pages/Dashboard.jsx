@@ -8,7 +8,11 @@ import { MapContainer, TileLayer, Circle, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MOCK_ALERTS, MOCK_ZONES, MOCK_EVENTS } from '../constants/data';
 
-// Helper to fix map rendering inside dynamic containers
+/**
+ * ResizeFix: Forces Leaflet to recalculate its container dimensions.
+ * Necessary because the map is rendered inside a dynamically sized React layout
+ * and Leaflet sometimes calculates size before the DOM has fully settled.
+ */
 const ResizeFix = () => {
   const map = useMap();
   useEffect(() => {
@@ -406,7 +410,8 @@ const Dashboard = () => {
                   <div key={event.id} className="group cursor-pointer">
                     <div className="flex items-center gap-4 mb-3">
                       <div className="w-12 h-12 rounded-xl overflow-hidden border border-white/10 group-hover:border-royal-500 transition-all">
-                        <img src={event.image} className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700" alt="" />
+                        {/* Small event thumbnail; alt describes the event for screen readers */}
+                        <img src={event.image} className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700" alt={`Thumbnail for ${event.title}`} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="font-bold text-white text-sm truncate group-hover:text-royal-500 transition-colors">{event.title}</h4>
