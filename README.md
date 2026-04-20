@@ -81,9 +81,7 @@ It bridges the gap between disparate event tools by providing:
 ---
 
 ## Repository
-
-[github.com/Aslina1315/Event-Flow-Smart-Navigation-and-Real-Time-Crowd-Management-for-Large-Events](https://github.com/Aslina1315/Event-Flow-Smart-Navigation-and-Real-Time-Crowd-Management-for-Large-Events)
-
+https://github.com/Aslina1315/EVENT-FLOW
 ---
 
 ## Local Development
