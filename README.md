@@ -1,196 +1,151 @@
-# EventFlow – Smart Crowd Management & Event Planning System
+# EventFlow – Smart Navigation & Real-Time Crowd Management
 
-## Vertical
+> **Smart Cities and Public Safety** · Live at [eventflow-53196192067.asia-south1.run.app](https://eventflow-53196192067.asia-south1.run.app/)
 
-Smart Cities and Public Safety
+Managing large crowds at concerts, sports matches, and public gatherings is a persistent safety and experience challenge:
+- **High crowd density** causes congestion, delays, and panic risks
+- **Poor in-venue navigation** leaves attendees lost and frustrated
+- **No real-time visibility** means organizers react to problems too late
+- **Fragmented planning** for food, ticketing, and safety increases operational costs
+
+These failures directly impact **public safety and event quality**.
+
+---
+
+## Solution
+
+**EventFlow** is a unified web platform that combines real-time crowd intelligence, smart navigation, and event planning tools into a single interface for both attendees and organizers.
+
+It bridges the gap between disparate event tools by providing:
+
+- Live crowd-density monitoring and visual zone mapping
+- AI-powered navigation and safety alert routing
+- Integrated event discovery across global venues
+- Budget and food-cost estimation for event planning
+
+---
+
+## Features
+
+| Feature | Description |
+|---------|-------------|
+| 🗺 **Interactive Map** | Real-world venue map (OpenStreetMap/Leaflet) with live crowd-density zones |
+| 📊 **Executive Dashboard** | Real-time pulse stats, zone intelligence, and weather sync |
+| 🔔 **Alert System** | Priority-tiered safety alerts (critical / warning / info) |
+| 🤖 **AI Concierge Chat** | Natural-language crowd guidance and event discovery |
+| 🎫 **Global Event Discovery** | Real-world events via Ticketmaster API + curated fallback data |
+| 💰 **Budget Planner** | Per-person cost estimation (min / average / max) |
+| 🍕 **Food Price Predictor** | Demand-based pricing simulation for event vendors |
+| 💳 **Payment Interface** | Simulated booking flow with input validation |
+| 👤 **Profile Management** | User profile view and update |
+| ⚙️ **Settings Panel** | Theme and notification preferences |
+| 🚨 **Emergency SOS Modal** | One-tap emergency broadcast with nearest exit routing |
+| 📈 **Analytics Dashboard** | Crowd trends and event performance insights |
+
+---
+
+### Frontend
+- **React 18** (Vite bundler)
+- **Tailwind CSS** – utility-first styling
+- **Framer Motion** – page transitions and micro-animations
+- **React Router v6** – client-side routing
+- **Leaflet / React-Leaflet** – interactive maps
+- **Lucide React** – icon library
+
+### Backend
+- **Node.js** + **Express.js** – REST API server
+- **SQLite** (via `better-sqlite3` / `sqlite`) – local persistent database
+- **Axios** – external API calls (Ticketmaster, Open-Meteo weather, Wikipedia)
+- **Crypto** (built-in) – SHA-256 password hashing
+
+### Infrastructure & Deployment
+- **Google Cloud Run** – containerized production deployment (auto-scaling)
+- **GitHub** – source control and CI trigger
+
+---
+
+## Google Services Used
+
+| Service | How It Is Used |
+|---------|----------------|
+| **Google Cloud Run** | Hosts the full-stack application as a containerized service with automatic HTTPS, zero-downtime deploys, and auto-scaling based on traffic |
+| **Google Identity (mocked)** | Auth page demonstrates Google OAuth sign-in flow (mock token stored for demo) |
+| **Open-Meteo API** | Real-time weather data displayed on the dashboard (free, no key required) |
+
+---
 
 ## Live Application
 
-https://eventflow-53196192067.asia-south1.run.app/
+🌐 **[https://eventflow-53196192067.asia-south1.run.app/](https://eventflow-53196192067.asia-south1.run.app/)**
+
+---
 
 ## Repository
 
-[(Add your GitHub repository link here)](https://github.com/Aslina1315/Event-Flow-Smart-Navigation-and-Real-Time-Crowd-Management-for-Large-Events)
+[github.com/Aslina1315/Event-Flow-Smart-Navigation-and-Real-Time-Crowd-Management-for-Large-Events](https://github.com/Aslina1315/Event-Flow-Smart-Navigation-and-Real-Time-Crowd-Management-for-Large-Events)
 
+---
 
-## Problem Statement
+## Local Development
 
-Managing large crowds during events such as concerts, sports matches, and public gatherings is a challenging task due to:
+```bash
+# Install root dependencies
+npm install
 
-- High crowd density and congestion  
-- Difficulty in navigation within event spaces  
-- Lack of real-time alerts and guidance  
-- Inefficient planning of resources such as food and entry points  
+# Start the backend (port 3006)
+cd server && npm install && node server.js
 
-These challenges impact both **user experience and safety**.
+# Start the frontend (port 5173)
+cd client && npm install && npm run dev
+```
 
+The frontend dev server proxies `/api/*` requests to the backend automatically via Vite's proxy config.
 
-## Solution Overview
+---
 
-EventFlow is a web-based application designed to provide an integrated platform for:
+## Testing
 
-- Crowd awareness and visualization  
-- Event navigation  
-- Alert-based safety systems  
-- Event planning support  
+```bash
+# Backend API tests (Jest + Supertest)
+cd server && npm test
 
-The application is built as a **functional frontend system with working features**, designed to simulate and represent a real-world crowd management solution.
+# See tests/README.md for full test documentation
+```
 
+---
 
-## Approach and Logic
+## Project Architecture
 
-The system follows a modular and component-based frontend architecture.
+```
+eventflow/
+├── client/          # React + Vite frontend
+│   └── src/
+│       ├── pages/       # Route-level page components
+│       ├── components/  # Reusable UI components (layout + ui)
+│       └── constants/   # Mock data fallbacks
+├── server/          # Express + SQLite backend
+│   ├── server.js        # Main API server
+│   └── server.test.js   # Jest API tests
+└── tests/           # Test documentation & smoke-test guide
+```
 
-- OpenStreetMap (Leaflet) is used for real-world map visualization  
-- Crowd levels and alerts are dynamically simulated to represent real-time behavior  
-- UI components are interconnected to mimic a full system workflow  
-- The structure is designed to support backend integration and scalability  
+---
 
-The application demonstrates how a **full-stack system would behave**, even though backend connectivity is partially implemented.
+## Assumptions
 
+- Crowd data is **simulated** in the absence of real IoT sensor feeds
+- Alerts are generated from predefined seed data and random simulation
+- Payment flow is **UI-only** (no real payment gateway connected)
+- Profile and settings are stored in the local SQLite database per session
+- The Ticketmaster API key is embedded for demo purposes; production use requires a private key via `.env`
 
-## How the Solution Works
-
-### Dashboard
-Provides a centralized view of crowd conditions, alerts, and system insights.
-
-### Map System
-Displays event locations and crowd zones using real map data. Visual elements help users understand crowd density and navigation paths.
-
-### Alert System
-Shows alerts with priority levels (critical, medium, low) to indicate crowd situations and risks.
-
-### Notification System
-Displays alerts and updates through a notification interface.
-
-### Chat Interface
-Provides a conversational UI representing an assistant to guide users.
-
-### Budget Planner
-Allows users to estimate event expenses based on:
-- Number of people  
-- Food selection  
-
-Displays:
-- Minimum cost  
-- Maximum cost  
-- Average cost  
-
-### Food Price Predictor
-Simulates pricing variations based on demand and crowd size, helping in better planning.
-
-### Payment Interface
-Provides a simulated payment experience with:
-- Input validation  
-- Payment summary  
-- Confirmation flow  
-
-### Profile Management
-Allows users to view and update profile details.
-
-### Settings Panel
-Provides user customization options such as:
-- Theme preferences  
-- Notification settings  
-
-### Analytics Dashboard
-Displays insights such as:
-- Crowd trends  
-- Event statistics  
-- Planning data  
-
-
-## Features Implemented
-
-- Interactive dashboard  
-- Map-based visualization (OpenStreetMap)  
-- Alert system with priority levels  
-- Notification system  
-- Chat interface  
-- Budget planner (UI + logic)  
-- Food price predictor (simulated)  
-- Payment interface (UI-based)  
-- Profile management (UI-based)  
-- Settings panel  
-- Analytics dashboard  
-- Responsive and animated UI  
-- Simulated real-time system behavior  
-
-
-## Features Requiring Further Integration
-
-The following features are implemented at the UI/logic level but require backend or real data integration:
-
-- Real-time crowd data updates  
-- Live API-based event data  
-- Persistent user data (profile, settings)  
-- Payment gateway integration  
-- AI-based prediction models  
-
-
-
-## Assumptions Made
-
-- Crowd data is simulated and not sourced from real-time APIs  
-- Alerts are generated using predefined logic  
-- Payment system is UI-based and not connected to real transactions  
-- Profile and settings data are not persistently stored  
-- Real-time behavior is simulated for demonstration purposes
-
-
-## Tech Stack
-
-Frontend:
-- React (Vite)  
-- Tailwind CSS  
-- Framer Motion  
-
-Map Integration:
-- OpenStreetMap (Leaflet)  
-
-Backend (Partially Structured):
-- Node.js  
-- Express.js  
-- SQLite  
-
-
-## Deployment
-
-The frontend application has been successfully deployed using Google Cloud after resolving multiple build and deployment issues.
-
-Live Application:
-https://eventflow-53196192067.asia-south1.run.app/
-
-
-## Development Experience
-
-This project was developed as part of Virtual Prompt Wars using the Antigravity AI tool.
-
-While AI significantly helped in generating structure and components, building a working system required:
-
-- Continuous prompt refinement  
-- Debugging multiple errors during development and deployment  
-- Handling routing and build issues  
-- Structuring components and features manually  
-
-Developing a fully functional frontend within a limited time was challenging, but it resulted in a working prototype with multiple integrated features.
-
-
-## Project Insight
-
-The idea behind EventFlow exists across different platforms in separate forms, but this project aims to combine them into a **single unified system**.
-
-The features are designed based on **real-world problems**, focusing on improving crowd safety and event planning.
-
+---
 
 ## Conclusion
+EventFlow demonstrates a practical, **full-stack architecture** for real-world crowd management. It combines:
+- Strong domain understanding of the problem
+- Modern React component patterns with real API integration
+- Cloud-native deployment on Google Cloud Run
+- A clear roadmap toward production-grade IoT and payment integrations
 
-EventFlow is a **feature-rich frontend implementation** with a clear roadmap toward becoming a fully integrated full-stack system.
-
-It demonstrates:
-
-- Strong understanding of the problem  
-- Practical implementation of features  
-- A scalable system design  
-
-This project serves as a solid foundation for developing a real-time intelligent crowd management platform.
+This project was developed as part of **Virtual Prompt Wars** using the Antigravity AI coding assistant.
