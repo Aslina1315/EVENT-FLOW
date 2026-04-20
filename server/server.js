@@ -4,10 +4,11 @@ const cors = require('cors');
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 const path = require('path');
-const crypto = require('crypto');
-const axios = require('axios');
+const crypto = require('crypto'); // Used for SHA-256 password hashing (demo-level security)
+const axios = require('axios');  // Used for Ticketmaster and Wikipedia external API calls
 const app = express();
-// Using 3006 to avoid EADDRINUSE
+
+// Port configured via environment variable for cloud deployments (Cloud Run, Render, etc.)
 const PORT = process.env.PORT || 3006;
 
 app.use(cors());
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 let db;
 
 // Initialize SQLite Database
+// This function is called once at startup before the server begins accepting requests.
 async function initDb() {
   try {
     console.log('Connecting to database...');
@@ -30,7 +32,8 @@ async function initDb() {
 
     console.log('Initializing tables...');
     
-    // 1. Force Reset Events V2 (The most important part for the user)
+    // Drop and recreate events_v2 on every restart to keep curated seed data fresh
+    // (avoids stale or duplicate rows from previous runs)
     await db.exec('DROP TABLE IF EXISTS events_v2');
     await db.exec(`
       CREATE TABLE events_v2 (
@@ -159,18 +162,25 @@ async function initDb() {
 
 // start() function defined at the end of the file
 
-// --- API ROUTER ---
+// -------------------------------------------------------------------
+// API ROUTER
+// All client-facing endpoints are mounted under /api (see bottom of file)
+// -------------------------------------------------------------------
 const apiRouter = express.Router();
 
-// Health Check
+// Health Check — used by cloud platforms and load balancers to verify uptime
 apiRouter.get('/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime() }));
 
 // --- AUTH API ---
+// Registration: validates required fields, hashes password with SHA-256, inserts user.
+// Note: SHA-256 without salting is acceptable for this demo but not for production use.
 apiRouter.post('/auth/register', async (req, res) => {
   const { name, email, password } = req.body;
+
+  // Validate that all required registration fields are present
   if (!name || !email || !password) return res.status(400).json({ error: 'All fields required' });
   
-  // Basic hash for demo purposes
+  // Hash the password using SHA-256 (demo purposes only — use bcrypt in production)
   const hash = crypto.createHash('sha256').update(password).digest('hex');
   
   try {
@@ -181,13 +191,15 @@ apiRouter.post('/auth/register', async (req, res) => {
   }
 });
 
+// Login: matches hashed credentials and returns a base64 session token.
+// Token format: base64(userId-timestamp) — suitable for demo, use JWT in production.
 apiRouter.post('/auth/login', async (req, res) => {
   const { email, password } = req.body;
   const hash = crypto.createHash('sha256').update(password).digest('hex');
   
   const user = await db.get('SELECT id, name, email FROM users WHERE email = ? AND password = ?', [email, hash]);
   if (user) {
-    // Generate simple token for demo
+    // Generate a simple base64-encoded session token (demo-grade, not cryptographically secure)
     const token = Buffer.from(`${user.id}-${Date.now()}`).toString('base64');
     res.json({ token, user });
   } else {
