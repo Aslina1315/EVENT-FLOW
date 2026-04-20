@@ -2,7 +2,12 @@
 
 > **Smart Cities and Public Safety** · Live at [eventflow-53196192067.asia-south1.run.app](https://eventflow-53196192067.asia-south1.run.app/)
 
+---
+
+## Problem Statement
+
 Managing large crowds at concerts, sports matches, and public gatherings is a persistent safety and experience challenge:
+
 - **High crowd density** causes congestion, delays, and panic risks
 - **Poor in-venue navigation** leaves attendees lost and frustrated
 - **No real-time visibility** means organizers react to problems too late
@@ -44,6 +49,8 @@ It bridges the gap between disparate event tools by providing:
 
 ---
 
+## Tech Stack
+
 ### Frontend
 - **React 18** (Vite bundler)
 - **Tailwind CSS** – utility-first styling
@@ -81,7 +88,9 @@ It bridges the gap between disparate event tools by providing:
 ---
 
 ## Repository
+
 https://github.com/Aslina1315/EVENT-FLOW
+
 ---
 
 ## Local Development
@@ -109,6 +118,80 @@ cd server && npm test
 
 # See tests/README.md for full test documentation
 ```
+# EventFlow – Testing Guide
+
+## Overview
+
+EventFlow uses a lightweight, non-breaking testing strategy suited for a
+React + Express application. Tests are organized into two layers:
+
+| Layer | Tool | Location |
+|-------|------|----------|
+| Backend (API) | Node.js built-in `assert` + manual Jest tests | `tests/server/` |
+| Frontend (UI logic) | Vitest + React Testing Library | `client/src/__tests__/` |
+
+---
+
+## How to Run Tests
+
+### Backend unit tests
+```bash
+cd server
+npm test
+```
+
+### Frontend unit tests
+```bash
+cd client
+npm test
+```
+
+---
+
+## What Is Being Tested
+
+### Backend (`server/server.js`)
+
+| Test | Description |
+|------|-------------|
+| Health endpoint | `GET /api/health` returns `{ status: 'ok' }` |
+| Events endpoint | `GET /api/events` returns an array of objects |
+| Event shape validation | Each event has `title`, `date`, `location`, `type`, `price` |
+| Auth – missing fields | `POST /api/auth/register` with missing fields returns HTTP 400 |
+| Auth – invalid login | `POST /api/auth/login` with wrong credentials returns HTTP 401 |
+| Chat endpoint | `POST /api/chat` with a message returns a `reply` string |
+
+### Frontend components
+
+| Component | What is checked |
+|-----------|-----------------|
+| `Auth.jsx` | Form renders; submit with empty fields shows error message |
+| `Events.jsx` | Event cards render with correct title and booking button |
+| `Dashboard.jsx` | Stats panel shows zone and alert data |
+| `EmergencyModal.jsx` | Modal opens/closes; aria-labels are present |
+
+---
+
+## Running a Quick Manual Smoke Test
+
+1. Start the server: `cd server && node server.js`
+2. Open the live URL or run `cd client && npm run dev`
+3. Verify:
+   - [ ] Home page loads without errors
+   - [ ] Login with any email/password registers and logs in
+   - [ ] Dashboard shows crowd stats and the map
+   - [ ] Events page lists events and "Explore" search works
+   - [ ] Chat page returns an AI concierge reply
+   - [ ] SOS button opens the Emergency modal
+   - [ ] Emergency modal can be closed
+
+---
+
+## See Also
+
+- [`server/server.test.js`](../server/server.test.js) — automated API tests
+- [`client/src/__tests__/`](../client/src/__tests__/) — component tests
+
 
 ---
 
@@ -140,7 +223,9 @@ eventflow/
 ---
 
 ## Conclusion
+
 EventFlow demonstrates a practical, **full-stack architecture** for real-world crowd management. It combines:
+
 - Strong domain understanding of the problem
 - Modern React component patterns with real API integration
 - Cloud-native deployment on Google Cloud Run
