@@ -126,35 +126,41 @@ const Auth = ({ onLogin }) => {
                   animate={{ opacity: 1, x: 0 }}
                   className="relative group"
                 >
-                  <User className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-royal-500 transition-colors" size={24} />
+                  <User className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-royal-500 transition-colors" size={24} aria-hidden="true" />
                   <input
                     type="text"
                     placeholder="Global Agent Identifier (Full Name)"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    aria-label="Full name"
+                    autoComplete="name"
                     className="w-full bg-white/[0.02] border-2 border-white/5 rounded-2xl py-6 pl-16 pr-6 text-white placeholder:text-gray-700 focus:outline-none focus:border-royal-500 transition-all font-bold text-lg"
                   />
                 </motion.div>
               )}
 
               <div className="relative group">
-                <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-royal-500 transition-colors" size={24} />
+                <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-royal-500 transition-colors" size={24} aria-hidden="true" />
                 <input
                   type="email"
                   placeholder="Neural Network Endpoint (Email)"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  aria-label="Email address"
+                  autoComplete="email"
                   className="w-full bg-white/[0.02] border-2 border-white/5 rounded-2xl py-6 pl-16 pr-6 text-white placeholder:text-gray-700 focus:outline-none focus:border-royal-500 transition-all font-bold text-lg"
                 />
               </div>
 
               <div className="relative group">
-                <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-royal-500 transition-colors" size={24} />
+                <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-royal-500 transition-colors" size={24} aria-hidden="true" />
                 <input
                   type="password"
                   placeholder="Encryption Key (Password)"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  aria-label="Password"
+                  autoComplete={isLogin ? 'current-password' : 'new-password'}
                   className="w-full bg-white/[0.02] border-2 border-white/5 rounded-2xl py-6 pl-16 pr-6 text-white placeholder:text-gray-700 focus:outline-none focus:border-royal-500 transition-all font-bold text-lg"
                 />
               </div>
@@ -175,6 +181,7 @@ const Auth = ({ onLogin }) => {
                 </div>
               </div>
 
+              {/* Mock Google Sign-In — simulates OAuth success by storing a demo token/user in localStorage */}
               <Button 
                 onClick={(e) => {
                   e.preventDefault();
@@ -190,6 +197,7 @@ const Auth = ({ onLogin }) => {
                   }, 1200);
                 }} 
                 variant="secondary" 
+                aria-label="Sign in with Google"
                 className="w-full py-6 flex items-center justify-center gap-4 group"
               >
                 <svg className="w-6 h-6" viewBox="0 0 24 24">
