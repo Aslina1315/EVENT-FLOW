@@ -7,15 +7,22 @@ import { useNavigate } from 'react-router-dom';
 import { MOCK_EVENTS } from '../constants/data';
 
 const Events = () => {
+  // State: list of events shown in the grid (initialized with mock data for offline safety)
   const [events, setEvents] = useState(MOCK_EVENTS);
+  // State: generic loading flag for API fetch
   const [loading, setLoading] = useState(false);
+  // State: separate flag for "World Feed" global discovery fetch
   const [discovering, setDiscovering] = useState(false);
+  // State: current value typed in the city search box
   const [searchLocation, setSearchLocation] = useState('');
+  // State: the city filter that was actually applied / submitted
   const [activeLocation, setActiveLocation] = useState('');
+  // State: active category tab ("All" by default)
   const [filter, setFilter] = useState('All');
   const navigate = useNavigate();
 
-  const PLACEHOLDERS = [
+  // Fallback images used when an event's own image fails to load
+  const FALLBACK_IMAGES = [
     'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&q=80',
     'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&q=80',
     'https://images.unsplash.com/photo-1514525253361-bee8718a300c?w=800&q=80',
@@ -24,7 +31,8 @@ const Events = () => {
     'https://images.unsplash.com/photo-1475721027185-404ece7741ec?w=800&q=80'
   ];
 
-  const getFallbackImage = (id) => PLACEHOLDERS[id % PLACEHOLDERS.length];
+  // Returns a deterministic fallback image URL based on the event's array index
+  const getFallbackImage = (id) => FALLBACK_IMAGES[id % FALLBACK_IMAGES.length];
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -91,17 +99,19 @@ const Events = () => {
           </motion.div>
           
           <div className="w-full xl:w-auto flex flex-col md:flex-row gap-4 items-stretch">
-            <form onSubmit={handleSearch} className="relative group flex-1 md:w-[450px]">
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-royal-500 transition-colors" size={24} />
+            <form onSubmit={handleSearch} className="relative group flex-1 md:w-[450px]" role="search">
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-royal-500 transition-colors" size={24} aria-hidden="true" />
               <input 
                 type="text" 
                 placeholder="Search any city (e.g. Dubai, Paris, Mumbai)..."
                 value={searchLocation}
                 onChange={(e) => setSearchLocation(e.target.value)}
+                aria-label="Search events by city"
                 className="w-full bg-white/[0.02] border-2 border-white/5 rounded-3xl py-6 pl-16 pr-6 text-white placeholder:text-gray-600 focus:outline-none focus:border-royal-500 transition-all font-bold text-lg"
               />
               <button 
                 type="submit"
+                aria-label="Search events in the entered city"
                 className="absolute right-3 top-3 bottom-3 bg-royal-500 hover:bg-royal-600 text-white px-8 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-glow-primary active:scale-95"
               >
                 Explore
@@ -169,7 +179,7 @@ const Events = () => {
         >
           <div className="w-2 h-2 bg-royal-500 rounded-full animate-ping"></div>
           <span className="font-black uppercase tracking-[0.2em] text-[10px] text-royal-500">Discovering Hub: {activeLocation}</span>
-          <button onClick={() => {setActiveLocation(''); setSearchLocation('')}} className="ml-4 text-gray-500 hover:text-white transition-colors">✕</button>
+          <button onClick={() => {setActiveLocation(''); setSearchLocation('')}} aria-label="Clear city filter" className="ml-4 text-gray-500 hover:text-white transition-colors">✕</button>
         </motion.div>
       )}
 
@@ -205,10 +215,11 @@ const Events = () => {
             {events.filter(e => filter === 'All' || e.type === filter).map((event, i) => (
               <GlassCard key={event.id} delay={i * 0.05} className="p-0 border-white/5 flex flex-col h-auto min-h-[750px] group hover:border-royal-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-royal-500/10">
                 <div className="relative h-72 overflow-hidden">
+                  {/* Event banner image — falls back to a curated placeholder on load error */}
                   <img 
                     src={event.image || getFallbackImage(i)} 
                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
-                    alt="" 
+                    alt={`Banner image for ${event.title}`}
                     onError={(e) => e.target.src = getFallbackImage(i)}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-90"></div>
@@ -249,15 +260,18 @@ const Events = () => {
                   </div>
 
                   <div className="grid grid-cols-1 gap-4">
-                    <Button 
+                    {/* Primary CTA: routes to payment page with event data as state */}
+                  <Button 
                       onClick={() => handleBook(event)}
+                      aria-label={`Book ticket for ${event.title}`}
                       className="w-full py-8 bg-gradient-to-r from-royal-600 to-indigo-600 text-white font-black uppercase tracking-[0.3em] text-sm rounded-3xl shadow-glow-primary hover:from-royal-500 hover:to-indigo-500 transition-all flex items-center justify-center gap-3 group/btn"
                     >
-                      <Zap size={20} className="group-hover/btn:animate-pulse" />
+                      <Zap size={20} className="group-hover/btn:animate-pulse" aria-hidden="true" />
                       Instant Booking
                     </Button>
+                    {/* Secondary CTA: opens the official event website in a new tab */}
                     {event.source_url && event.source_url !== '#' && (
-                      <a href={event.source_url} target="_blank" rel="noreferrer" className="w-full">
+                      <a href={event.source_url} target="_blank" rel="noreferrer" className="w-full" aria-label={`Official website for ${event.title}`}>
                         <Button variant="secondary" className="w-full py-5 bg-white/[0.03] border-white/10 text-white font-black uppercase tracking-widest text-[9px] rounded-2xl">
                           Official Site
                         </Button>
